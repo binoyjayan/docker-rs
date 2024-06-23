@@ -32,3 +32,4 @@ regex = "1"                                                        # for regular
 flate2 = "1.0.25"                                                  # for handling compressed data
 tar = "0.4.38"
 clap = "4.5.7"
+nix = { version = "0.29.0", features = ["sched"] }

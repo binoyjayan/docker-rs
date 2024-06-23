@@ -1,6 +1,6 @@
 use anyhow::{Context, Result};
+use std::fs;
 use std::os::unix::fs::chroot;
-use std::{fs};
 use tempfile::tempdir;
 
 fn main() -> Result<()> {
@@ -15,6 +15,10 @@ fn main() -> Result<()> {
     let dest = chroot_dir.join(command.strip_prefix("/").unwrap());
     // Copy the 'docker-explorer' binary passed as 'args[3]'
     std::fs::copy(command, dest)?;
+
+    // Execute as PID 1
+    nix::sched::unshare(nix::sched::CloneFlags::CLONE_NEWPID)
+        .context("Failed to unshare PID namespace")?;
     chroot(chroot_dir).context("Failed to chroot")?;
 
     let output = std::process::Command::new(command)
@@ -31,5 +35,5 @@ fn main() -> Result<()> {
         })?;
 
     let exit_code = output.status.code().unwrap_or(1);
-    std::process::exit(exit_code);    
+    std::process::exit(exit_code);
 }
