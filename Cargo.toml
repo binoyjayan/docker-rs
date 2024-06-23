@@ -33,3 +33,4 @@ flate2 = "1.0.25"                                                  # for handlin
 tar = "0.4.38"
 clap = "4.5.7"
 nix = { version = "0.29.0", features = ["sched"] }
+libflate = "2.1.0"
