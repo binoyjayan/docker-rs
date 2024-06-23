@@ -25,7 +25,10 @@ fn main() -> Result<()> {
         io::stdout().write_all(stdout.as_bytes())?;
         io::stderr().write_all(stderr.as_bytes())?;
     } else {
-        std::process::exit(1);
+        let exit_code = output.status.code().unwrap_or(1);
+        let stderr = std::str::from_utf8(&output.stderr)?;
+        io::stderr().write_all(stderr.as_bytes())?;
+        std::process::exit(exit_code);
     }
 
     Ok(())
